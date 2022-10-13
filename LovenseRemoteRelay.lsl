@@ -1,7 +1,6 @@
 string gObjectUrl;
 string gIpAddress;
 string gDomain;
-string gToysJson;
 
 list gHttpParams = [
     HTTP_METHOD, "POST",
@@ -9,20 +8,7 @@ list gHttpParams = [
     HTTP_VERIFY_CERT, FALSE
 ];
 
-string HTML_BODY = "
-<!DOCTYPE html>
-<html><body>
-<h2 style=\"text-align: center;\">Your HUD is about to connect<br />to your Lovense Remote!</h2>
-<p style=\"text-align: center;\">Make sure the app is open <em>and</em><br />connected to the same Wi-Fi as your computer.<br />
-<span style=\"color: #999999;\"><em>(in case you're using the app on your phone)</em></span></p>
-<p style=\"text-align: center;\">If the HUD is unable to connect:<br />Make sure the ports are open in your router!<br />
-<span style=\"color: #999999;\"><em>(You can see which ports and local IP are needed</em></span><br />
-<span style=\"color: #999999;\"><em>when you enable Game Mode in Lovense Remote.)</em></span></p>
-</body></html>
-";
-
-string TEXT_BODY = "
-Your HUD is about to connect to your Lovense Remote!
+string TEXT_BODY = "Your HUD is about to connect to your Lovense Remote!
 
 Make sure Game Mode is enabled.
 
@@ -44,7 +30,7 @@ requestUrl() {
 }
 
 getToys() {
-    // todo: what if domain not set
+    // TODO: what if domain not set
     string json = llList2Json(JSON_OBJECT, ["command", "GetToys"]);
     llHTTPRequest(gDomain+"/command", gHttpParams, json);
 }
@@ -63,15 +49,6 @@ pattern(float duration, float interval, list steps) {
         steps = llList2List(steps, 0, 49);
         stepCount = 50;
     }
-
-    // llOwnerSay(llList2CSV([
-    //     duration, interval, stepCount
-    // ]));
-
-    // llOwnerSay(llList2CSV([
-    //     "rule", "V:1;F:v;S:" + (string)ms + "#",
-    //     "strength", llDumpList2String(steps, ";")
-    // ]));
 
     string json = llList2Json(JSON_OBJECT, [
         "command", "Pattern",
@@ -103,7 +80,6 @@ default
             return;
         }
 
-        gToysJson = "";
         getToys();
     }
 
@@ -117,11 +93,6 @@ default
 
     http_response(key id, integer status, list metadata, string body)
     {
-        // llOwnerSay((string)[
-        //     "http_response status:", status,
-        //     "http_response body: ", body
-        // ]);
-
         if (status != 200) {
             createMessage([
                 "Could not connect! (Code ",status,")"
@@ -154,10 +125,6 @@ default
 
         string dataToys = llJsonGetValue(body, ["data", "toys"]);
         if (dataToys != JSON_INVALID) {
-            gToysJson = body;
-            // llOwnerSay((string)[
-            //     "Toy response saved"
-            // ]);
             list toyKeys = jsonGetkeys(dataToys);
             integer toyCount = llGetListLength(toyKeys);
 
@@ -165,7 +132,6 @@ default
             integer i;
             for (i = 0; i < toyCount; ++i) {
                 string value = llJsonGetValue(dataToys, (list)llList2String(toyKeys, i));
-                // llOwnerSay((string)["toy ", i, ": ", value]);
                 if (value == JSON_INVALID) jump break;
                 if (value == JSON_NULL) jump break;
                 toys += [
@@ -174,7 +140,6 @@ default
                 ];
             } @break;
 
-            llOwnerSay("Toys: " + llList2CSV(toys));
             createMessage([
                 llGetListLength(toys) / 2, " connected toys found!"
             ]);
@@ -183,11 +148,6 @@ default
 
     http_request(key id, string method, string body)
     {
-        // llOwnerSay((string)[
-        //     "http_request method: ", method, " ",
-        //     "http_request body: ", body
-        // ]);
-
         if (method == URL_REQUEST_GRANTED) {
             gObjectUrl = body;
             createMessage([
@@ -213,11 +173,5 @@ default
         llHTTPResponse(id, 200, TEXT_BODY);
 
         getToys();
-
-        // llOwnerSay(llList2CSV([
-        //     "IP: ", gIpAddress,
-        //     "Domain: ", gDomain,
-        //     "JSON: ", json
-        // ]));
     }
 }
