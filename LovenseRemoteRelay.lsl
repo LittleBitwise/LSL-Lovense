@@ -26,7 +26,7 @@ createMessage(list parts) {
 
 requestUrl() {
     createMessage(["Please wait a moment!"]);
-    llRequestSecureURL();
+    llRequestURL();
 }
 
 getToys() {
