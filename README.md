@@ -1,6 +1,6 @@
 # Lovense Relay for Second Life
 
-This is an LSL implementation of a "serverless" controller for a single user of Lovense Remote.
+This is an LSL (Linden Scripting Language) implementation of a "serverless" controller for a single user of Lovense Remote.
 
 ## What?
 In short, this script will get the user's IP public address when they click a link* from the script. The script uses the IP and a known port to make web requests to the user's app and control the device**.
