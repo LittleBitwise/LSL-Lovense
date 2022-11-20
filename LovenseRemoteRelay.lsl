@@ -8,16 +8,16 @@ list gHttpParams = [
     HTTP_VERIFY_CERT, FALSE
 ];
 
-string TEXT_BODY = "Your HUD is about to connect to your Lovense Remote!
-
-Make sure Game Mode is enabled.
-
-If you're using a mobile device:
-Make sure it's connected to the same network as your computer.
-
-If the HUD is unable to connect:
-Make sure the ports are open in your router!
-(You can see which ports and local IP are needed when you enable Game Mode in Lovense Remote.)
+string TEXT_BODY = "
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml'><body>
+<h2 style=\"text-align: center;\">Your HUD is about to connect<br />to your Lovense Remote!</h2>
+<p style=\"text-align: center;\">Make sure the app is open <em>and</em><br />connected to the same Wi-Fi as your computer.<br />
+<span style=\"color: #999999;\"><em>(in case you're using the app on your phone)</em></span></p>
+<p style=\"text-align: center;\">If the HUD is unable to connect:<br />Make sure the ports are open in your router!<br />
+<span style=\"color: #999999;\"><em>(You can see which ports and local IP are needed</em></span><br />
+<span style=\"color: #999999;\"><em>when you enable Game Mode in Lovense Remote.)</em></span></p>
+</body></html>
 ";
 
 createMessage(list parts) {
@@ -169,7 +169,7 @@ default
             gDomain = (string)["https://",gIpAddress,":30010"];
         }
 
-        llSetContentType(id, CONTENT_TYPE_TEXT);
+        llSetContentType(id, CONTENT_TYPE_XHTML);
         llHTTPResponse(id, 200, TEXT_BODY);
 
         getToys();
